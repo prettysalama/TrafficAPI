@@ -1,7 +1,12 @@
-﻿namespace TrafficAPI.Models
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Options;
+
+namespace TrafficAPI.Models
 {
     public class Car
     {
+        [BsonId]
         public string   PlateNumber           { get; set; }
         public string   Model                 { get; set; }
         public string   Color                 { get; set; }

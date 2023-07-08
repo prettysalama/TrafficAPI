@@ -21,7 +21,7 @@ namespace TrafficAPI.Controllers
         {
             // add the ticket to the MongoDB collection
             await _tickets.InsertOneAsync(ticket);
-            return Ok();
+            return Ok($"A ticket was created successfully. Ticket type: {ticket.Type}, price: {ticket.Price}");
         }
     }
 }

@@ -14,6 +14,9 @@ builder.Services.AddSingleton<IMongoClient>(provider =>
     return new MongoClient(connectionString);
 });
 
+builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.Parse("192.168.1.14"), 5191));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

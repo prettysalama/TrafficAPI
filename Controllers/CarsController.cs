@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using TrafficAPI.Models;
+using TrafficAPI.Requests;
 
 namespace TrafficAPI.Controllers
 {
@@ -16,17 +17,27 @@ namespace TrafficAPI.Controllers
             _cars = database.GetCollection<Car>("cars");
         }
 
-        [HttpGet("{plateNumber}")]
-        public async Task<ActionResult<Car>> GetCar(string plateNumber)
-        {
-            // query the MongoDB collection for the car with the given plate number
-            var car = await _cars.Find(c => c.PlateNumber == plateNumber).FirstOrDefaultAsync();
-            if (car == null)
-            {
-                return NotFound();
-            }
-            return car;
-        }
+[HttpPost("GetCar")]
+public async Task<ActionResult<Car>> GetCar([FromBody] CarRequestModel request)
+{
+    // query the MongoDB collection for the car with the given plate number
+    Console.WriteLine($"Looking for car with plate number {request.PlateNumber} in the database..");
+    var car = await _cars.Find(c => c.PlateNumber == request.PlateNumber).FirstOrDefaultAsync();
+
+        // Log all the entries in the MongoDB collection
+    var allCars = await _cars.Find(_ => true).ToListAsync();
+    Console.WriteLine("All cars in the database:");
+    foreach (var carr in allCars)
+    {
+        Console.WriteLine($"PlateNumber: {carr.PlateNumber}, Model: {carr.Model}, Color: {carr.Color}");
+    }
+
+    if (car == null)
+    {
+        return BadRequest("This car plate number doesn't exist in the database.");
+    }
+    return car;
+}
 
         [HttpGet("GenerateAndInsertCars")]
         public IActionResult GenerateAndInsertCars()
