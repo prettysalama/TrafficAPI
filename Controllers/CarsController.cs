@@ -24,14 +24,6 @@ public async Task<ActionResult<Car>> GetCar([FromBody] CarRequestModel request)
     Console.WriteLine($"Looking for car with plate number {request.PlateNumber} in the database..");
     var car = await _cars.Find(c => c.PlateNumber == request.PlateNumber).FirstOrDefaultAsync();
 
-        // Log all the entries in the MongoDB collection
-    var allCars = await _cars.Find(_ => true).ToListAsync();
-    Console.WriteLine("All cars in the database:");
-    foreach (var carr in allCars)
-    {
-        Console.WriteLine($"PlateNumber: {carr.PlateNumber}, Model: {carr.Model}, Color: {carr.Color}");
-    }
-
     if (car == null)
     {
         return BadRequest("This car plate number doesn't exist in the database.");
